@@ -62,11 +62,13 @@ if __name__ == "__main__":
 
     # Get the CARLA world
     world = client.get_world()
+        
+    # Get the current map (town) name
+    print('Map Name: ', world.get_map().name)
     
-    print_filtered_blueprints('plane', world)
+    #print_filtered_blueprints('plane', world)
 
-
-    # Define the axis direction (x, y, z)
+    # Define the axis direction (x, y, z) where to dispose the other object of the array of blueprints
     axis_direction = (0.0, 1.0, 0.0)  # Along the x-axis
 
     
@@ -111,18 +113,31 @@ if __name__ == "__main__":
         'static.prop.drone_military_reaper']
         
      # Define the base origin location
+    #Object disposed over the roof on one of the Central buildings in Town Carla/Maps/Town10HD_Opt
     base_origin_location = (-81.0, 68.0, 26.5)   
+    # In front of the camera at boot in the town Carla/Maps/Town10HD_Opt
     base_origin_location = (-164.0, 163.0, 20.5)
+    # Oblects spawned in the middle of the sea
+    base_origin_location = (400.0, 163.0, 20.5)
+    
 
      # Spawn birds and derive positions for drones, bayraktar drones, and reaper drones
     spawned_birds = spawn_objects(birds_blueprint_array, base_origin_location, axis_direction, 0.8, world)
 
     # Derive positions for drones, bayraktar drones, and reaper drones from the position of spawned_birds  
-    
-    offset_drones = tuple(x + y for x, y in zip(base_origin_location, (5.0, 0.0, 0.0)))
+    #
+    #         A
+    #         | X               location = (X, Y, Z)
+    #         |
+    # --------+------->
+    #        z|     Y
+    #         |        
+    #         |    
+        
+    offset_drones = tuple(x + y for x, y in zip(base_origin_location,    (5.0, 0.0, 0.0)))
     offset_bayraktar = tuple(x + y for x, y in zip(base_origin_location, (6.0, -12.0, 0.0)))
-    offset_reaper = tuple(x + y for x, y in zip(base_origin_location, (12.0, -4.0, 0.0)))
-    offset_planes = tuple(x + y for x, y in zip(base_origin_location, (30.0, -30.0, 20.0)))
+    offset_reaper = tuple(x + y for x, y in zip(base_origin_location,    (12.0, -4.0, 0.0)))
+    offset_planes = tuple(x + y for x, y in zip(base_origin_location,    (30.0, -30.0, 20.0)))
 
     spawned_drones = spawn_objects(drones_blueprint_array, offset_drones  , axis_direction, 0.5, world)
     bayraktar_drones = spawn_objects(bayraktar_blueprint_array, offset_bayraktar  , axis_direction, 10, world)
@@ -130,7 +145,7 @@ if __name__ == "__main__":
     planes = spawn_objects(plane_blueprints, offset_planes , axis_direction, 10, world)
 
     # Wait for 5 seconds
-    time.sleep(5)
+    time.sleep(20)
 
     # Destroy the spawned actors and terminate the program
     destroy_actors(spawned_birds)
